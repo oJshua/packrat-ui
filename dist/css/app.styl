@@ -1,0 +1,38 @@
+/**
+ * Some styles for the demo
+ */
+
+#zone1, #zone2, #zone3
+  position absolute
+  width 250px
+  height 250px
+  border 1px solid blue;
+
+  &.hovered
+    border 1px solid green
+
+#zone1
+  left 100px
+  top 10px
+
+#zone2
+  left 500px
+  top 10px
+
+#zone3
+  top 280px
+
+.pin
+  position absolute
+  width 50px
+  height 50px
+  border 1px solid black
+  &:not(.ui-draggable-dragging)
+    transition .25s
+
+  &.w2
+    width 100px
+
+  &.w4
+    width 200px
+    height 100px
