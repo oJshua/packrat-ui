@@ -1,6 +1,6 @@
 {
   "name": "packrat-ui",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "realtime bin-packing layout library",
   "main": "dist/js/packrat.js",
   "scripts": {

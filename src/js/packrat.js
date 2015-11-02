@@ -136,13 +136,3 @@ Packrat.prototype.detachElement = function(element) {
 $.bridget('packrat', Packrat);
 
 module.exports = Packrat;
-
-
-/// test
-
-$('#zone1, #zone2, #zone3').packrat({
-  accept: '.pin'
-});
-
-
-$('.pin').draggable();

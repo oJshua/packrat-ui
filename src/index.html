@@ -8,6 +8,16 @@
     <script type="text/javascript" src="/js/vendor/jquery-2.1.4.js"></script>
     <script type="text/javascript" src="/js/vendor/jquery-ui.js"></script>
     <script src="http://localhost:35729/livereload.js"></script>
+    <script type="text/javascript">
+      jQuery(function() {
+        $('#zone1, #zone2, #zone3').packrat({
+          accept: '.pin'
+        });
+
+
+        $('.pin').draggable();
+      });
+    </script>
   </head>
   <body>
 

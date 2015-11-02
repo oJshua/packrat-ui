@@ -335,16 +335,6 @@ $.bridget('packrat', Packrat);
 
 module.exports = Packrat;
 
-
-/// test
-
-$('#zone1, #zone2, #zone3').packrat({
-  accept: '.pin'
-});
-
-
-$('.pin').draggable();
-
 },{"./item":1,"./packer":2,"./rect":4,"./vendor/jquery-bridget":5}],4:[function(require,module,exports){
 /**
  * Simple Rect constructor - By desandro
