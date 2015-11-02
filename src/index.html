@@ -14,6 +14,12 @@
           accept: '.pin'
         });
 
+        $('.pin').each(function() {
+          $(this).css({
+            top: Math.random() * 1000,
+            left: Math.random() * 1000
+          });
+        });
 
         $('.pin').draggable();
       });
@@ -30,8 +36,12 @@
     <div id="3" class="pin"></div>
     <div id="4" class="pin w2"></div>
     <div id="5" class="pin w2"></div>
-    <div id="6" class="pin w4"></div>
-    <div id="7" class="pin"></div>
+    <div id="6" class="pin w2"></div>
+    <div id="7" class="pin w2"></div>
+    <div id="8" class="pin w2"></div>
+    <div id="9" class="pin w2"></div>
+    <div id="10" class="pin w4"></div>
+    <div id="11" class="pin"></div>
 
     <script src="/js/packrat.js"></script>
   </body>

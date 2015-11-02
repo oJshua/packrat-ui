@@ -20,11 +20,11 @@ Item.prototype.updateRect = function() {
   var pos = this.layout.$el.position();
   this.rect.x = this.$el.position().left - pos.left;
   this.rect.y = this.$el.position().top - pos.top;
-  this.rect.width = this.$el.width();
-  this.rect.height = this.$el.height();
+  this.rect.width = this.$el.outerWidth() + 10;
+  this.rect.height = this.$el.outerHeight() + 10;
 
-  this.placeRect.width = this.$el.width();
-  this.placeRect.height = this.$el.height();
+  this.placeRect.width = this.$el.outerWidth() + 10;
+  this.placeRect.height = this.$el.outerHeight() + 10;
 };
 
 Item.prototype.updateDOM = function() {
@@ -37,8 +37,8 @@ Item.prototype.updateDOM = function() {
 
 Item.prototype.dragMove = function(x, y) {
   var pos = this.layout.$el.position();
-  x = x - pos.left;
-  y = y - pos.top;
+  x = parseInt(x, 10) - pos.left;
+  y = parseInt(y, 10) - pos.top;
   this.placeRect.x = x;
   this.placeRect.y = y;
 
@@ -206,7 +206,7 @@ var Item = require('./item');
 var Packrat = function(el, options) {
   this.el = el;
   this.$el = jQuery(el);
-  this.options = options;
+  this.options = options || {};
   this._init();
 };
 
@@ -220,16 +220,15 @@ Packrat.prototype._init = function() {
 
   this.$el.droppable({
     accept: this.options.accept,
-    hoverClass: 'hovered',
     drop: function(event, ui) {
-      self.attachElement(ui.draggable);
+      self.attachElement(ui.draggable, false);
       self.layout();
     },
     out: function(event, ui) {
       self.detachElement(ui.draggable);
     },
     over: function(event, ui) {
-      self.attachElement(ui.draggable);
+      self.attachElement(ui.draggable, true);
     }
   });
 };
@@ -239,13 +238,15 @@ Packrat.prototype.isAttached = function(element) {
   return (id in this.collection);
 };
 
-Packrat.prototype.attachElement = function(element) {
+Packrat.prototype.attachElement = function(element, isPlacing) {
   if (this.isAttached(element)) {
     return;
   }
 
   var self = this;
   var item = new Item(element, this);
+  element.addClass('packrat-attached');
+  item.isPlacing = isPlacing;
   this.collection[element.attr('id')] = item;
 
   this.order.push(item);
@@ -257,21 +258,27 @@ Packrat.prototype.attachElement = function(element) {
       self.itemDragStart(item, ui);
     },
     drag: function(event, ui) {
-      self.itemDragMove(item, ui.position.left, ui.position.right);
+      self.itemDragMove(item, ui.position.left, ui.position.top);
     },
     dragstop: function(event, ui) {
       self.itemDragStop(item, ui);
+    },
+    resizestop: function(event, ui) {
+      item.updateRect();
     }
   };
 
-  element.on('dragstart', item.events.dragstart);
-  element.on('drag', item.events.drag);
-  element.on('dragstop', item.events.dragstop);
+  element
+    .on('dragstart', item.events.dragstart)
+    .on('drag', item.events.drag)
+    .on('dragstop', item.events.dragstop)
+    .on('resizestop', item.events.resizestop);
 
   item.unbindEvents = function() {
     element.off('dragstart', item.events.dragstart);
     element.off('drag', item.events.drag);
     element.off('dragstop', item.events.dragstop);
+    element.off('resize', item.events.resizestop);
   };
 };
 
@@ -284,7 +291,7 @@ Packrat.prototype.itemDragMove = function(item, x, y) {
   item.dragMove(x, y);
 
   this.order.sort(function(a, b) {
-    return a.rect.x - b.rect.x || a.rect.y - b.rect.y;
+    return a.rect.y - b.rect.y || a.rect.x - b.rect.x;
   });
 
   this.layout();
@@ -320,6 +327,7 @@ Packrat.prototype.getItem = function(element) {
 
 Packrat.prototype.detachElement = function(element) {
   var item = element.data('packrat.item');
+  element.removeClass('packrat-attached');
   this.packer.addSpace(item.rect);
   item.unbindEvents();
   for(var i=0; i<this.order.length; i++) {

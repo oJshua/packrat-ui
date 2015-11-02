@@ -19,11 +19,11 @@ Item.prototype.updateRect = function() {
   var pos = this.layout.$el.position();
   this.rect.x = this.$el.position().left - pos.left;
   this.rect.y = this.$el.position().top - pos.top;
-  this.rect.width = this.$el.width();
-  this.rect.height = this.$el.height();
+  this.rect.width = this.$el.outerWidth() + 10;
+  this.rect.height = this.$el.outerHeight() + 10;
 
-  this.placeRect.width = this.$el.width();
-  this.placeRect.height = this.$el.height();
+  this.placeRect.width = this.$el.outerWidth() + 10;
+  this.placeRect.height = this.$el.outerHeight() + 10;
 };
 
 Item.prototype.updateDOM = function() {
@@ -36,8 +36,8 @@ Item.prototype.updateDOM = function() {
 
 Item.prototype.dragMove = function(x, y) {
   var pos = this.layout.$el.position();
-  x = x - pos.left;
-  y = y - pos.top;
+  x = parseInt(x, 10) - pos.left;
+  y = parseInt(y, 10) - pos.top;
   this.placeRect.x = x;
   this.placeRect.y = y;
 
